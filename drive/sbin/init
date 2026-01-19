@@ -1,0 +1,50 @@
+#!/bin/bash
+# Minimal init for real rootfs
+# No systemd, no busybox init
+
+export PATH=/usr/sbin:/usr/bin:/sbin:/bin
+export HOME=/root
+export TERM=xterm-256color
+
+# INTERNAL TODO: Need to create a function to fetch build codename, string, and version no.
+echo "Starting FlowOS Columbia Basin - rootFS init" 
+
+# Mount sysroot filesystems
+mount -n -t proc proc /proc
+mount -n -t sysfs sysfs /sys
+mount -t devtmpfs dev /dev
+mount -n -t tmpfs tmpfs /run
+
+# Start udev
+#if [ -x /usr/lib/systemd/systemd-udevd ]; then
+#    echo "[init] starting udevd"
+#    /usr/lib/systemd/systemd-udevd --daemon
+#    udevadm trigger --action=add
+#    udevadm settle
+#elif [ -x /sbin/udevd ]; then
+#    echo "[init] starting udevd (standalone)"
+#    /sbin/udevd --daemon
+#    udevadm trigger --action=add
+#    udevadm settle
+#else
+#    echo "[init] WARNING: udev not found"
+#fi
+
+[ -f /etc/hostname ] && hostname "$(cat /etc/hostname)"
+
+# Mount all filesystems that are defined in /etc/fstab
+mount -a || echo "[init] mount -a failed"
+
+# Set ip addr loopback
+ip link set lo up 2>/dev/null
+
+# Set up additional network interfaces (should be located in an file in the future)
+ip addr add 192.168.100.2/24 dev eth0
+ip link set eth0 up
+ip route add default via 192.168.100.1 # set origin route
+
+# Exit into userspace and spawn getty
+echo "[init] spawning bash"
+
+/bin/bash
+#exec /sbin/agetty --noclear tty1 linux

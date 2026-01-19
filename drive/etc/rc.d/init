@@ -1,0 +1,3 @@
+#!/bin/sh
+/bin/mount -av # Mount inital drives 
+/bin/hostname FlowOS # Set default hostname so OS is discoverable by other network devices
