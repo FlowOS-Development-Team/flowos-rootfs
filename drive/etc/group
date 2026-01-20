@@ -1,0 +1,4 @@
+root:x:0:
+users:x:100:
+wheel:x:10:root
+user:x:1000:

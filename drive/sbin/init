@@ -53,5 +53,10 @@ done
 # Exit into userspace and spawn getty
 echo "[UserSpace] Booting into bash....."
 
-/bin/bash
-#exec /sbin/agetty --noclear tty1 linux
+# DO NOT UNCOMMENT THIS IN AN PROD ENVIRONMENT, IT WILL IGNORE ALL LOGGING IN AND JUST GIVE ROOT ACCESS TO A NON PRIVLIDGED (potentially) USER
+#/bin/bash
+
+# Start agetty and launch login prompt
+
+echo "[User] Launching login prompt....."
+exec /sbin/agetty --noclear tty1 38400 login
