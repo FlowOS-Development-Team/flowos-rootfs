@@ -4,7 +4,7 @@
 
 export PATH=/usr/sbin:/usr/bin:/sbin:/bin
 export HOME=/root
-export TERM=xterm-256color
+export TERM=vt100
 
 # INTERNAL TODO: Need to create a function to fetch build codename, string, and version no.
 echo "Starting FlowOS Columbia Basin - rootFS initalizing....."
@@ -54,9 +54,9 @@ done
 echo "[UserSpace] Booting into bash....."
 
 # DO NOT UNCOMMENT THIS IN AN PROD ENVIRONMENT, IT WILL IGNORE ALL LOGGING IN AND JUST GIVE ROOT ACCESS TO A NON PRIVLIDGED (potentially) USER
-#/bin/bash
+/bin/bash
 
 # Start agetty and launch login prompt
 
 echo "[User] Launching login prompt....."
-exec /sbin/agetty --noclear tty1 38400 login
+#exec /sbin/agetty --noclear tty1 38400 login
