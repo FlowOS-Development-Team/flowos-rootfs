@@ -18,8 +18,6 @@ echo "[DiskMGMT] Mounting /dev (rootFS)....."
 mount -t devtmpfs dev /dev
 echo "[DiskMGMT] Mounting /run (rootFS)....."
 mount -n -t tmpfs tmpfs /run
-echo "[DiskMGMT] Mounting /var (rootFS)....."
-mount -t rw var var /var
 
 echo "[NetworkSTCK] Setting hostname to: $(cat /etc/hostname)....."
 [ -f /etc/hostname ] && hostname "$(cat /etc/hostname)"
@@ -54,9 +52,11 @@ done
 echo "[UserSpace] Booting into bash....."
 
 # DO NOT UNCOMMENT THIS IN AN PROD ENVIRONMENT, IT WILL IGNORE ALL LOGGING IN AND JUST GIVE ROOT ACCESS TO A NON PRIVLIDGED (potentially) USER
-/bin/bash
+#/bin/bash
 
 # Start agetty and launch login prompt
 
 echo "[User] Launching login prompt....."
-#exec /sbin/agetty --noclear tty1 38400 login
+while true; do
+    /sbin/agetty --noclear -L ttyS0 38400 /bin/login
+done
