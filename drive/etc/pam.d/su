@@ -1,0 +1,3 @@
+auth     sufficient pam_rootok.so
+account  required   pam_unix.so
+session  required   pam_unix.so
