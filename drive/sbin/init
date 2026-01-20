@@ -39,9 +39,9 @@ mount -a || echo "[init] mount -a failed"
 ip link set lo up 2>/dev/null
 
 # Set up additional network interfaces (should be located in an file in the future)
-ip addr add 192.168.100.2/24 dev eth0
+#ip addr add 192.168.100.2/24 dev eth0
 ip link set eth0 up
-ip route add default via 192.168.100.1 # set origin route
+ip route add default via 192.168.1.1 # set origin route
 
 # Exit into userspace and spawn getty
 echo "[init] spawning bash"
