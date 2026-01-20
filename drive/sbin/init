@@ -44,9 +44,11 @@ dhcpcd eth0 --rebind
 # Execute start up scripts located in /etc/init.d
 
 echo "[Sys] Executing scripts located in /etc/init.d....."
-for file in /etc/init.d
-do
-  exec ./"$file" >> results.out
+for file in /etc/init.d; do
+  [ -x "$file" ] || continue
+    echo "[Sys] Executing $file"
+  ( "$file" start )
+done
 
 # Exit into userspace and spawn getty
 echo "[UserSpace] Booting into bash....."
