@@ -11,3 +11,5 @@ sudo passwd user
 ./bin/agetty
 ./sbin/agetty
 ./sbin/agetty tty0S1
+sudo su
+exit
