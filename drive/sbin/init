@@ -62,11 +62,11 @@ done
 echo "[UserSpace] Booting into login environment....."
 
 # DO NOT UNCOMMENT THIS IN AN PROD ENVIRONMENT, IT WILL IGNORE ALL LOGGING IN AND JUST GIVE ROOT ACCESS TO A NON PRIVLIDGED (potentially) USER
-#/bin/bash
+/bin/bash
 
 # Start agetty and launch login prompt
 
 echo "[User] Launching login prompt....."
-while true; do
-    /sbin/agetty --noclear -L ttyS0 38400 /bin/login
-done
+#while true; do
+#    /sbin/agetty --noclear -L ttyS0 38400 /bin/login
+#done
