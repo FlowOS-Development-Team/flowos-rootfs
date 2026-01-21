@@ -19,6 +19,16 @@ mount -t devtmpfs dev /dev
 echo "[DiskMGMT] Mounting /run (rootFS)....."
 mount -n -t tmpfs tmpfs /run
 
+# Mount system devices
+echo "[DiskMGMT] Mounting /dev/null....."
+mknod -m 666 /dev/null c 1 3
+echo "[DiskMGMT] Mounting /dev/console....."
+mknod -m 600 /dev/console c 5 1
+echo "[DiskMGMT] Mounting /dev/tty....."
+mknod -m 666 /dev/tty c 5 0
+echo "[DiskMGMT] Mounting /dev/ptmx....."
+mknod -m 666 /dev/ptmx c 5 2
+
 echo "[NetworkSTCK] Setting hostname to: $(cat /etc/hostname)....."
 [ -f /etc/hostname ] && hostname "$(cat /etc/hostname)"
 
@@ -49,7 +59,7 @@ for file in /etc/init.d; do
 done
 
 # Exit into userspace and spawn getty
-echo "[UserSpace] Booting into bash....."
+echo "[UserSpace] Booting into login environment....."
 
 # DO NOT UNCOMMENT THIS IN AN PROD ENVIRONMENT, IT WILL IGNORE ALL LOGGING IN AND JUST GIVE ROOT ACCESS TO A NON PRIVLIDGED (potentially) USER
 #/bin/bash

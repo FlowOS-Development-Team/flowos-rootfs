@@ -1,5 +1,4 @@
-user:x:1000:
 root:x:0:
 users:x:100:
-user:x:1000:
 wheel:x:10:root
+user:x:1000:
