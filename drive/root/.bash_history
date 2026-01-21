@@ -13,3 +13,5 @@ sudo passwd user
 ./sbin/agetty tty0S1
 sudo su
 exit
+curl
+exit

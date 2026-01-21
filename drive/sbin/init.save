@@ -1,0 +1,69 @@
+#!/bin/bash
+# FlowOS Columbia Basin - Alpha Developer Test
+# RootFilesystem (RootFS) Initilization Script
+
+export PATH=/usr/sbin:/usr/bin:/sbin:/bin
+export HOME=/root
+export TERM=vt100
+
+# INTERNAL TODO: Need to create a function to fetch build codename, string, and version no.
+echo "Starting FlowOS Columbia Basin - rootFS initalizing....."
+
+# Mount sysroot filesystems
+echo "[DiskMGMT] Mounting rootfs /proc (rootFS)....."
+mount -n -t proc proc /proc
+echo "[DiskMGMT] Mounting /sys (rootFS)....."
+mount -n -t sysfs sysfs /sys
+echo "[DiskMGMT] Mounting /dev (rootFS)....."
+mount -t devtmpfs dev /dev
+echo "[DiskMGMT] Mounting /run (rootFS)....."
+mount -n -t tmpfs tmpfs /run
+
+echo "[NetworkSTCK] Setting hostname to: $(cat /etc/hostname)....."
+[ -f /etc/hostname ] && hostname "$(cat /etc/hostname)"
+
+# Mount all filesystems that are defined in /etc/fstab
+echo "[DiskMGMT] Mounting devices defined in /etc/fstab"
+mount -a || echo "[DiskMGMT] *WARNING* mount -a failed"
+
+# Set ip addr loopback
+echo "[NetworkSTCK] Setting up lo interface....."
+ip link set lo up 2>/dev/null
+
+# Set up additional network interfaces (should be located in an file in the future)
+#ip addr add 192.168.100.2/24 dev eth0
+echo "[NetworkSTCK] Starting Network Interface devices....."
+ip link set eth0 up
+echo "[NetworkSTCK] Registering IP Tables....."
+ip route add default via 192.168.1.1 # set origin route
+echo "[NetworkSTCK] Starting DHCP client (dhcpcd)....."
+dhcpcd eth0 --rebind
+
+# Execute start up scripts located in /etc/init.d
+
+echo "[Sys] Executing scripts located in /etc/init.d....."
+for file in /etc/init.d; do
+  [ -x "$file" ] || continue
+    echo "[Sys] Executing $file"
+  ( "$file" start )
+done
+
+# Create all tty terminals 0-63
+
+mknod -m 600 /dev/tty0 c 4 0
+for i in $(seq 1 63); do
+    mknod -m 600 /dev/tty$i c 4 $i
+done
+
+# Exit into userspace and spawn getty
+echo "[UserSpace] Booting into bash....."
+
+# DO NOT UNCOMMENT THIS IN AN PROD ENVIRONMENT, IT WILL IGNORE ALL LOGGING IN AND JUST GIVE ROOT ACCESS TO A NON PRIVLIDGED (potentially) USER
+#/bin/bash
+
+# Start agetty and launch login prompt
+
+echo "[User] Launching login prompt....."
+while true; do
+    /sbin/agetty --noclear -L ttyS0 38400 /bin/login
+done
